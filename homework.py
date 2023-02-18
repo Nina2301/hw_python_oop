@@ -45,7 +45,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError
+        raise NotImplementedError("Метод должен быть реализован в подклассе!")
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -96,8 +96,8 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP: float = 1.38
-    CALORIES_MEAN_SPEED_SHIFT = 1.1
-    CALORIES_MEAN_SPEED_MULTIPLIER = 2
+    CALORIES_MEAN_SPEED_SHIFT: float = 1.1
+    CALORIES_MEAN_SPEED_MULTIPLIER: float = 2
 
     def __init__(self,
                  action: int,
@@ -111,10 +111,12 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
+        """Получить среднюю скорость движения, км/ч."""
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
+        """Получить количество затраченных калорий."""
         return ((self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT)
                 * self.CALORIES_MEAN_SPEED_MULTIPLIER * self.weight
                 * self.duration)
@@ -126,7 +128,7 @@ def read_package(workout_type: str, data: List[float]) -> Training:
                                                  'RUN': Running,
                                                  'WLK': SportsWalking}
     if workout_type not in class_training:
-        raise NotImplementedError
+        raise KeyError("Ошибка в введенных данных!")
     return class_training[workout_type](*data)
 
 
